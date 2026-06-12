@@ -24,14 +24,18 @@ struct PersistenceController {
         container = NSPersistentContainer(name: "Model")
 
         if inMemory {
-            // Redireciona o armazenamento para um caminho temporário, evitando gravação real em disco.
-            container.persistentStoreDescriptions.first?.url = URL(fileURLWithPath: "/dev/null")
+            // Cada instância recebe um store em memória próprio, evitando que testes compartilhem dados.
+            let description = NSPersistentStoreDescription()
+            description.type = NSInMemoryStoreType
+            description.setOption(true as NSNumber, forKey: NSMigratePersistentStoresAutomaticallyOption)
+            description.setOption(true as NSNumber, forKey: NSInferMappingModelAutomaticallyOption)
+            container.persistentStoreDescriptions = [description]
+        } else {
+            // Habilita migração automática para suportar novas versões do modelo (ex.: campo emailUsuario).
+            let description = container.persistentStoreDescriptions.first
+            description?.setOption(true as NSNumber, forKey: NSMigratePersistentStoresAutomaticallyOption)
+            description?.setOption(true as NSNumber, forKey: NSInferMappingModelAutomaticallyOption)
         }
-
-        // Habilita migração automática para suportar novas versões do modelo (ex.: campo emailUsuario).
-        let description = container.persistentStoreDescriptions.first
-        description?.setOption(true as NSNumber, forKey: NSMigratePersistentStoresAutomaticallyOption)
-        description?.setOption(true as NSNumber, forKey: NSInferMappingModelAutomaticallyOption)
 
         container.loadPersistentStores { _, error in
             if let error = error as NSError? {

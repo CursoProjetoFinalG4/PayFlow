@@ -113,8 +113,6 @@ struct FakeAuthRepositoryTests {
 // MARK: - CoreDataAssinaturaRepository
 
 // Testa o repositório local usando um banco em memória (nada vai para o disco).
-// Roda em série porque todos compartilham o mesmo store /dev/null em memória.
-@Suite(.serialized)
 struct CoreDataAssinaturaRepositoryTests {
 
     @Test func salvarCriaUmaDespesaNova() throws {
@@ -283,6 +281,11 @@ struct CriarContaViewModelTests {
 @Suite(.serialized)
 struct SessionStoreTests {
 
+    init() {
+        UserDefaults.standard.set(false, forKey: "isLoggedIn")
+        UserDefaults.standard.removeObject(forKey: "loggedUserEmail")
+    }
+
     @Test func loginGuardaEmailEMarcaSessao() {
         let sessao = SessionStore()
 
@@ -312,6 +315,12 @@ struct SessionStoreTests {
 @MainActor
 @Suite(.serialized)
 struct LoginViewModelTests {
+
+    init() {
+        UserDefaults.standard.set(false, forKey: "isLoggedIn")
+        UserDefaults.standard.removeObject(forKey: "loggedUserEmail")
+        UserDefaults.standard.removeObject(forKey: "usuariosCadastrados")
+    }
 
     @Test func loginComSenhaCertaAtualizaASessao() async {
         let viewModel = LoginViewModel()
