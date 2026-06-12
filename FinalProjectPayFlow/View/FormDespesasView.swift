@@ -56,8 +56,7 @@ struct FormDespesasView: View {
             Section("Dados") {
                 TextField("Assinatura", text: $nome)
 
-                TextField("Valor mensal", value: $valor, format: .currency(code: "BRL"))
-                    .keyboardType(.decimalPad)
+                CampoValorBRL(placeholder: "Valor mensal", valorEmReais: $valor)
 
                 Picker("Mês de vencimento", selection: $mes) {
                     ForEach(meses, id: \.self) { item in

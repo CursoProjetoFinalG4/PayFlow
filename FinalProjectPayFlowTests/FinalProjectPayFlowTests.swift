@@ -3,7 +3,7 @@ import Testing
 import CoreData
 @testable import FinalProjectPayFlow
 
-/
+
 private struct PricingRepositoryFake: PricingRepositoryProtocol {
     func fetchRemoteServices() async throws -> [RemoteService] {
         [
@@ -396,5 +396,41 @@ struct ResumoMensalViewModelTests {
         #expect(viewModel.sugestoesEconomia.count == 1)
         #expect(viewModel.sugestoesEconomia.first?.nome == "Cara")
         #expect(viewModel.errorMessage == nil)
+    }
+}
+
+// MARK: - MoedaBRL
+
+struct MoedaBRLTests {
+
+    @Test func digitos59000Viram590Reais() {
+        let centavos = MoedaBRL.centavosAPartirDeDigitos("59000")
+        #expect(centavos == 59000)
+        #expect(MoedaBRL.reais(de: centavos) == 590.0)
+    }
+
+    @Test func digito5ViraCincoCentavos() {
+        let centavos = MoedaBRL.centavosAPartirDeDigitos("5")
+        #expect(MoedaBRL.reais(de: centavos) == 0.05)
+    }
+
+    @Test func formatacaoUsaRealBrasileiro() {
+        let formatado = MoedaBRL.formatar(centavos: 59000)
+        #expect(formatado.contains("R$"))
+        #expect(formatado.contains("590,00"))
+    }
+
+    @Test func reaisParaCentavosNaEdicao() {
+        #expect(MoedaBRL.centavos(de: 590.0) == 59000)
+        #expect(MoedaBRL.formatar(centavos: MoedaBRL.centavos(de: 590.0)) == MoedaBRL.formatar(centavos: 59000))
+    }
+
+    @Test func textoFormatadoExtraiDigitosCorretamente() {
+        let centavos = MoedaBRL.centavosAPartirDeDigitos("R$ 590,00")
+        #expect(centavos == 59000)
+    }
+
+    @Test func campoVazioRetornaZeroCentavos() {
+        #expect(MoedaBRL.centavosAPartirDeDigitos("") == 0)
     }
 }
