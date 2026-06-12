@@ -115,3 +115,25 @@ xcodebuild test -project FinalProjectPayFlow.xcodeproj \
 - A autenticação é **local/fake**: contas e senhas ficam no `UserDefaults` em texto puro. Em produção seria backend real + Keychain — a troca é direta graças ao `AuthRepositoryProtocol`.
 - Os preços da API externa são usados apenas como **referência didática** para as sugestões de economia.
 - O app não sincroniza dados entre dispositivos (persistência apenas local).
+
+## Integrantes
+- Isabelle Gomez
+- Adriano da Silva
+- Alan Fagner
+- Luca Andrey
+- Rafael Moura
+- Willian Alexandre
+
+
+
+
+
+
+
+
+
+
+
+
+
+
