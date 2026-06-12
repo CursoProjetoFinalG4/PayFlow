@@ -39,14 +39,7 @@ struct DetalheDespesaView: View {
                 CardPayFlow {
                     VStack(alignment: .leading, spacing: 16) {
                         HStack(spacing: 14) {
-                            ZStack {
-                                Circle()
-                                    .fill(PayFlowCores.teal.opacity(0.15))
-                                    .frame(width: 52, height: 52)
-                                Image(systemName: "creditcard.fill")
-                                    .font(.title2)
-                                    .foregroundStyle(PayFlowCores.teal)
-                            }
+                            LogoAssinaturaView(despesa: despesa, tamanho: 52, simboloTamanho: .title2)
 
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(despesa.nomeDespesa ?? "Sem nome")

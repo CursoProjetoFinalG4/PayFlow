@@ -102,6 +102,16 @@ struct CoreDataAssinaturaRepositoryTests {
         let itens = try repo.fetchAll(emailUsuario: "teste@test.com")
         #expect(itens.count == 1)
         #expect(itens.first?.nomeDespesa == "Streaming")
+        #expect(itens.first?.logoIdentificador == nil)
+    }
+
+    @Test func salvarAssociaLogoDoCatalogoLocal() throws {
+        let repo = makeRepositorioEmMemoria()
+
+        try repo.save(despesa: nil, nome: "Spotify Família", valor: 34.90, mes: "Janeiro", emailUsuario: "teste@test.com")
+
+        let item = try #require(try repo.fetchAll(emailUsuario: "teste@test.com").first)
+        #expect(item.logoIdentificador == "spotify")
     }
 
     @Test func fetchAllOrdenaPelaOrdemDoCalendario() throws {
@@ -399,7 +409,37 @@ struct ResumoMensalViewModelTests {
     }
 }
 
-// MARK: - MoedaBRL
+// MARK: - LogoCatalog
+
+struct LogoCatalogTests {
+
+    @Test func spotifyEhReconhecido() {
+        #expect(LogoCatalog.resolver(nome: "Spotify") == "spotify")
+        #expect(LogoCatalog.resolver(nome: "Spotify Família") == "spotify")
+    }
+
+    @Test func netflixEhReconhecido() {
+        #expect(LogoCatalog.resolver(nome: "Netflix") == "netflix")
+    }
+
+    @Test func disneyPlusEhReconhecido() {
+        #expect(LogoCatalog.resolver(nome: "Disney+") == "disney")
+        #expect(LogoCatalog.resolver(nome: "Disney Plus") == "disney")
+    }
+
+    @Test func onlyfansEhReconhecido() {
+        #expect(LogoCatalog.resolver(nome: "OnlyFans") == "onlyfans")
+        #expect(LogoCatalog.resolver(nome: "Only Fans") == "onlyfans")
+    }
+
+    @Test func nomeDesconhecidoNaoTemLogo() {
+        #expect(LogoCatalog.resolver(nome: "Serviço XYZ") == nil)
+    }
+
+    @Test func normalizacaoRemoveAcentosECaixa() {
+        #expect(LogoCatalog.normalizar("  NétFlix  ") == "netflix")
+    }
+}
 
 struct MoedaBRLTests {
 

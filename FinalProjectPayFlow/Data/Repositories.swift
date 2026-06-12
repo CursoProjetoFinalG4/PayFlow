@@ -301,6 +301,7 @@ final class CoreDataAssinaturaRepository: AssinaturaRepositoryProtocol {
         current.nomeDespesa = nome
         current.valorDespesa = Float(valor)
         current.mes = mes
+        current.logoIdentificador = LogoCatalog.resolver(nome: nome)
 
         try context.save()
     }

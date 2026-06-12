@@ -68,13 +68,7 @@ struct CadastroView: View {
                         DetalheDespesaView(despesa: despesa, emailUsuario: emailUsuario)
                     } label: {
                         HStack(spacing: 14) {
-                            ZStack {
-                                Circle()
-                                    .fill(PayFlowCores.teal.opacity(0.15))
-                                    .frame(width: 40, height: 40)
-                                Image(systemName: "creditcard.fill")
-                                    .foregroundStyle(PayFlowCores.teal)
-                            }
+                            LogoAssinaturaView(despesa: despesa)
 
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(despesa.nomeDespesa ?? "Sem nome")

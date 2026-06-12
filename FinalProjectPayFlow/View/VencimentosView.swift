@@ -75,9 +75,7 @@ struct VencimentosView: View {
             } else {
                 ForEach(despesasOrdenadas) { item in
                     HStack(spacing: 14) {
-                        Image(systemName: "clock.fill")
-                            .font(.title3)
-                            .foregroundStyle(PayFlowCores.teal)
+                        LogoAssinaturaView(despesa: item, tamanho: 40, simboloTamanho: .body)
 
                         VStack(alignment: .leading, spacing: 4) {
                             Text(item.nomeDespesa ?? "Sem nome")
