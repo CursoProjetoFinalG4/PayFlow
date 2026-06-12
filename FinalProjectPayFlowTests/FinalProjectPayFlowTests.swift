@@ -1,20 +1,9 @@
-//
-//  FinalProjectPayFlowTests.swift
-//  FinalProjectPayFlowTests
-//
-//  Created by Santos, Adriano da Silva on 01/06/26.
-//
 
 import Testing
 import CoreData
 @testable import FinalProjectPayFlow
 
-// MARK: - Apoios usados pelos testes
-
-/* Implementação falsa do repositório de preços.
-   Devolve sempre a mesma lista fixa, sem depender de internet,
-   deixando os testes rápidos e previsíveis.
-   A média dos preços abaixo é 75 (50 e 100). */
+/
 private struct PricingRepositoryFake: PricingRepositoryProtocol {
     func fetchRemoteServices() async throws -> [RemoteService] {
         [
@@ -24,17 +13,14 @@ private struct PricingRepositoryFake: PricingRepositoryProtocol {
     }
 }
 
-/* Cria um repositório de despesas usando Core Data em memória.
-   Cada chamada devolve um banco novo e vazio, então um teste
-   nunca enxerga os dados criados por outro. */
+
+@MainActor
 private func makeRepositorioEmMemoria() -> AssinaturaRepositoryProtocol {
     let controller = PersistenceController(inMemory: true)
     return CoreDataAssinaturaRepository(context: controller.container.viewContext)
 }
 
-// MARK: - Meses
 
-// Testa a fonte única de meses, usada na ordenação cronológica do app.
 struct MesesTests {
 
     @Test func listaTemDozeMeses() {
@@ -49,23 +35,17 @@ struct MesesTests {
         #expect(Meses.indice(de: "Dezembro") == 11)
     }
 
-    // Meses desconhecidos (ou nulos) precisam ir para o final da ordenação.
     @Test func mesDesconhecidoVaiParaOFinal() {
         #expect(Meses.indice(de: "MesQueNaoExiste") == Meses.todos.count)
         #expect(Meses.indice(de: nil) == Meses.todos.count)
     }
 }
 
-// MARK: - FakeAuthRepository
 
-/* Testa o repositório de autenticação local.
-   A suíte roda em série porque os usuários ficam no UserDefaults,
-   que é compartilhado; em paralelo um teste atrapalharia o outro. */
 @Suite(.serialized)
 struct FakeAuthRepositoryTests {
 
     init() {
-        // Limpa os usuários salvos antes de cada teste.
         UserDefaults.standard.removeObject(forKey: "usuariosCadastrados")
     }
 
@@ -110,9 +90,8 @@ struct FakeAuthRepositoryTests {
     }
 }
 
-// MARK: - CoreDataAssinaturaRepository
 
-// Testa o repositório local usando um banco em memória (nada vai para o disco).
+@MainActor
 struct CoreDataAssinaturaRepositoryTests {
 
     @Test func salvarCriaUmaDespesaNova() throws {
@@ -125,7 +104,6 @@ struct CoreDataAssinaturaRepositoryTests {
         #expect(itens.first?.nomeDespesa == "Streaming")
     }
 
-    // A lista precisa sair na ordem do calendário, não em ordem alfabética.
     @Test func fetchAllOrdenaPelaOrdemDoCalendario() throws {
         let repo = makeRepositorioEmMemoria()
 
@@ -167,7 +145,6 @@ struct CoreDataAssinaturaRepositoryTests {
     }
 }
 
-// MARK: - FormDespesasViewModel
 
 // Testa as validações do formulário de despesas.
 @MainActor
@@ -222,7 +199,6 @@ struct FormDespesasViewModelTests {
     }
 }
 
-// MARK: - CriarContaViewModel
 
 /* Testa as validações da tela de criar conta.
    Os cenários abaixo falham antes de chamar o repositório,
@@ -273,7 +249,6 @@ struct CriarContaViewModelTests {
     }
 }
 
-// MARK: - SessionStore
 
 /* Testa o controle de sessão.
    Roda em série porque a sessão é persistida no UserDefaults compartilhado. */
@@ -294,7 +269,6 @@ struct SessionStoreTests {
         #expect(sessao.isLoggedIn == true)
         #expect(sessao.email == "will@email.com")
 
-        // Limpa para não influenciar outros testes.
         sessao.logout()
     }
 
@@ -309,7 +283,6 @@ struct SessionStoreTests {
     }
 }
 
-// MARK: - LoginViewModel
 
 // Testa o fluxo de login de ponta a ponta com o repositório fake.
 @MainActor
@@ -338,7 +311,6 @@ struct LoginViewModelTests {
         #expect(sessao.isLoggedIn == true)
         #expect(viewModel.isLoading == false)
 
-        // Limpa para não influenciar outros testes.
         sessao.logout()
     }
 
@@ -360,7 +332,6 @@ struct LoginViewModelTests {
     }
 }
 
-// MARK: - CadastroViewModel
 
 // Testa a exclusão feita a partir da lista de despesas.
 @MainActor
@@ -379,7 +350,6 @@ struct CadastroViewModelTests {
     }
 }
 
-// MARK: - MesesDespesasViewModel
 
 // Testa o carregamento da tela principal usando o repositório de preços fake.
 @MainActor
@@ -404,7 +374,6 @@ struct MesesDespesasViewModelTests {
     }
 }
 
-// MARK: - ResumoMensalViewModel
 
 // Testa o resumo mensal e as sugestões de economia.
 @MainActor
@@ -413,7 +382,6 @@ struct ResumoMensalViewModelTests {
     @Test func geraSugestaoApenasParaDespesaAcimaDaMedia() async throws {
         let repo = makeRepositorioEmMemoria()
 
-        // A média dos serviços fake é 75: só a despesa de 200 deve virar sugestão.
         try repo.save(despesa: nil, nome: "Cara", valor: 200, mes: "Janeiro", emailUsuario: "teste@test.com")
         try repo.save(despesa: nil, nome: "Barata", valor: 10, mes: "Janeiro", emailUsuario: "teste@test.com")
 

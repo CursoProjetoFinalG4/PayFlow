@@ -24,12 +24,14 @@ struct PersistenceController {
         container = NSPersistentContainer(name: "Model")
 
         if inMemory {
-            // Cada instância recebe um store em memória próprio, evitando que testes compartilhem dados.
-            let description = NSPersistentStoreDescription()
+            // Reutiliza a descrição padrão do container (mantém a configuração do modelo)
+            // e isola cada instância com URL única, evitando conflito entre testes paralelos.
+            let description = container.persistentStoreDescriptions.first!
             description.type = NSInMemoryStoreType
+            description.url = URL(fileURLWithPath: NSTemporaryDirectory())
+                .appendingPathComponent(UUID().uuidString)
             description.setOption(true as NSNumber, forKey: NSMigratePersistentStoresAutomaticallyOption)
             description.setOption(true as NSNumber, forKey: NSInferMappingModelAutomaticallyOption)
-            container.persistentStoreDescriptions = [description]
         } else {
             // Habilita migração automática para suportar novas versões do modelo (ex.: campo emailUsuario).
             let description = container.persistentStoreDescriptions.first
