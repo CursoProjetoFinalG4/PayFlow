@@ -3,7 +3,7 @@ import Testing
 import CoreData
 @testable import FinalProjectPayFlow
 
-/
+
 private struct PricingRepositoryFake: PricingRepositoryProtocol {
     func fetchRemoteServices() async throws -> [RemoteService] {
         [
@@ -102,6 +102,16 @@ struct CoreDataAssinaturaRepositoryTests {
         let itens = try repo.fetchAll(emailUsuario: "teste@test.com")
         #expect(itens.count == 1)
         #expect(itens.first?.nomeDespesa == "Streaming")
+        #expect(itens.first?.logoIdentificador == nil)
+    }
+
+    @Test func salvarAssociaLogoDoCatalogoLocal() throws {
+        let repo = makeRepositorioEmMemoria()
+
+        try repo.save(despesa: nil, nome: "Spotify Família", valor: 34.90, mes: "Janeiro", emailUsuario: "teste@test.com")
+
+        let item = try #require(try repo.fetchAll(emailUsuario: "teste@test.com").first)
+        #expect(item.logoIdentificador == "spotify")
     }
 
     @Test func fetchAllOrdenaPelaOrdemDoCalendario() throws {
@@ -200,9 +210,8 @@ struct FormDespesasViewModelTests {
 }
 
 
-/* Testa as validações da tela de criar conta.
-   Os cenários abaixo falham antes de chamar o repositório,
-   então nenhum usuário é gravado no aparelho. */
+// Testa as validações da tela de criar conta.
+   
 @MainActor
 struct CriarContaViewModelTests {
 
@@ -250,8 +259,8 @@ struct CriarContaViewModelTests {
 }
 
 
-/* Testa o controle de sessão.
-   Roda em série porque a sessão é persistida no UserDefaults compartilhado. */
+// Testa o controle de sessão.
+   
 @MainActor
 @Suite(.serialized)
 struct SessionStoreTests {
@@ -396,5 +405,71 @@ struct ResumoMensalViewModelTests {
         #expect(viewModel.sugestoesEconomia.count == 1)
         #expect(viewModel.sugestoesEconomia.first?.nome == "Cara")
         #expect(viewModel.errorMessage == nil)
+    }
+}
+
+// MARK: - LogoCatalog
+
+struct LogoCatalogTests {
+
+    @Test func spotifyEhReconhecido() {
+        #expect(LogoCatalog.resolver(nome: "Spotify") == "spotify")
+        #expect(LogoCatalog.resolver(nome: "Spotify Família") == "spotify")
+    }
+
+    @Test func netflixEhReconhecido() {
+        #expect(LogoCatalog.resolver(nome: "Netflix") == "netflix")
+    }
+
+    @Test func disneyPlusEhReconhecido() {
+        #expect(LogoCatalog.resolver(nome: "Disney+") == "disney")
+        #expect(LogoCatalog.resolver(nome: "Disney Plus") == "disney")
+    }
+
+    @Test func onlyfansEhReconhecido() {
+        #expect(LogoCatalog.resolver(nome: "OnlyFans") == "onlyfans")
+        #expect(LogoCatalog.resolver(nome: "Only Fans") == "onlyfans")
+    }
+
+    @Test func nomeDesconhecidoNaoTemLogo() {
+        #expect(LogoCatalog.resolver(nome: "Serviço XYZ") == nil)
+    }
+
+    @Test func normalizacaoRemoveAcentosECaixa() {
+        #expect(LogoCatalog.normalizar("  NétFlix  ") == "netflix")
+    }
+}
+
+struct MoedaBRLTests {
+
+    @Test func digitos59000Viram590Reais() {
+        let centavos = MoedaBRL.centavosAPartirDeDigitos("59000")
+        #expect(centavos == 59000)
+        #expect(MoedaBRL.reais(de: centavos) == 590.0)
+    }
+
+    @Test func digito5ViraCincoCentavos() {
+        let centavos = MoedaBRL.centavosAPartirDeDigitos("5")
+        #expect(MoedaBRL.reais(de: centavos) == 0.05)
+    }
+
+    @Test func formatacaoUsaRealBrasileiro() {
+        let formatado = MoedaBRL.formatar(centavos: 59000)
+        #expect(formatado.contains("R$"))
+        #expect(formatado.contains("590,00"))
+    }
+
+    @Test func reaisParaCentavosNaEdicao() {
+        #expect(MoedaBRL.centavos(de: 590.0) == 59000)
+        #expect(MoedaBRL.formatar(centavos: MoedaBRL.centavos(de: 590.0)) == MoedaBRL.formatar(centavos: 59000))
+    }
+
+    @Test func textoFormatadoExtraiDigitosCorretamente() {
+        let centavos = MoedaBRL.centavosAPartirDeDigitos("R$ 590,00")
+        #expect(centavos == 59000)
+    }
+
+    @Test func campoVazioRetornaZeroCentavos() {
+        #expect(MoedaBRL.centavosAPartirDeDigitos("") == 0)
     }
 }

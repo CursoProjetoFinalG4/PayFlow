@@ -1,27 +1,7 @@
-/*
-Importa o framework de construção de interface declarativa da Apple.
 
-É usado para montar toda a UI da tela de forma reativa.
-*/
 import SwiftUI
-
-/*
-Importa o CoreData para persistência local.
-
-Aqui é utilizado para recuperar os dados de assinaturas salvos no app.
-*/
 import CoreData
 
-/*
-View responsável por exibir um resumo mensal das despesas.
-
-Essa tela apresenta:
-- Totais agrupados por mês
-- Sugestões de economia com base em comparação com preços externos
-
-Ela depende de um ViewModel que concentra toda a lógica de carregamento
-e processamento dos dados.
-*/
 struct ResumoMensalView: View {
 
     @Environment(\.managedObjectContext) private var context
@@ -29,21 +9,7 @@ struct ResumoMensalView: View {
     @EnvironmentObject private var sessionStore: SessionStore
     @StateObject private var viewModel = ResumoMensalViewModel()
 
-    /*
-     Define a estrutura visual da tela.
-
-     A tela é organizada em uma List com duas seções principais:
-     - Totais por mês (agrupamento e soma das despesas)
-     - Potencial economia (comparação com preços externos)
-
-     Também trata os estados comuns:
-     - carregando (loading)
-     - erro
-     - vazio (sem dados)
-
-     O carregamento dos dados acontece automaticamente com o .task,
-     assim que a tela é exibida.
-     */
+    
     var body: some View {
         List {
             Section {

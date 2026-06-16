@@ -2,9 +2,7 @@ import SwiftUI
 
 enum PayFlowCores {
     static let teal = Color(red: 0.18, green: 0.61, blue: 0.55)
-
     static let tealEscuro = Color(red: 0.10, green: 0.42, blue: 0.38)
-
     static let creme = Color(red: 0.98, green: 0.96, blue: 0.88)
 }
 

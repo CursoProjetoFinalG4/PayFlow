@@ -4,19 +4,13 @@ import SwiftUI
 struct LoginView: View {
 
     @EnvironmentObject private var dependencies: AppDependencies
-
     @EnvironmentObject private var sessionStore: SessionStore
-
+    
     @AppStorage("emailSalvo") private var emailSalvo = ""
-
     @StateObject private var viewModel = LoginViewModel()
-
     @State private var emailText = ""
-
     @State private var senha = ""
-
     @State private var salvarEmail = false
-
     @State private var mostrarAlertaSenha = false
 
 
@@ -112,10 +106,7 @@ struct LoginView: View {
             }
             .navigationBarHidden(true)
             .onAppear {
-                // Recupera o email salvo para já deixar o campo preenchido ao abrir a tela.
                 emailText = emailSalvo
-
-                // Marca a opção de lembrar email quando já existir um valor armazenado.
                 salvarEmail = !emailSalvo.isEmpty
             }
             .alert("Esqueci a senha", isPresented: $mostrarAlertaSenha) {
@@ -128,8 +119,7 @@ struct LoginView: View {
     }
 }
 
-/* Esta pré-visualização permite abrir a tela no canvas com os objetos compartilhados
-   que ela precisa para funcionar durante os testes visuais. */
+
 #Preview {
     LoginView()
         .environmentObject(SessionStore())
