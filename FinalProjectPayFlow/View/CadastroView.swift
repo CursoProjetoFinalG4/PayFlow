@@ -1,19 +1,10 @@
-// Importa os componentes visuais do SwiftUI usados para montar a tela.
 import SwiftUI
-
-// Importa o Core Data, necessário para acessar, listar e remover as despesas salvas.
 import CoreData
 
-// Esta view mostra a lista de assinaturas cadastradas e permite navegar para os detalhes ou incluir novos itens.
 struct CadastroView: View {
 
-    // Recupera o contexto do Core Data disponível no ambiente da aplicação.
     @Environment(\.managedObjectContext) private var managedObjectContext
-
-    // Dá acesso às dependências compartilhadas, como os repositórios usados pela tela.
     @EnvironmentObject private var dependencies: AppDependencies
-
-    // Mantém o estado e as ações da tela, principalmente para exclusão e tratamento de erro.
     @StateObject private var cadastroViewModel = CadastroViewModel()
 
     var mes: String?
@@ -41,9 +32,7 @@ struct CadastroView: View {
         }
     }
 
-    /* Lista já ordenada pela posição real do mês no calendário e depois pelo nome.
-       O mês é texto no banco, então a ordenação alfabética sairia errada
-       (Abril antes de Janeiro); por isso a ordenação é feita aqui em memória. */
+    
     private var despesasOrdenadas: [Despesa] {
         despesas.sorted {
             let mesA = Meses.indice(de: $0.mes)
@@ -53,11 +42,7 @@ struct CadastroView: View {
         }
     }
 
-    /* Aqui a tela é montada de fato.
-       Primeiro ela verifica se existem despesas cadastradas.
-       Se não houver nada, mostra uma mensagem vazia para orientar quem estiver usando.
-       Se houver registros, monta a lista com navegação para o detalhe de cada item.
-       Também configura o botão de adicionar no topo e apresenta um alerta caso alguma operação falhe. */
+    
     var body: some View {
         List {
             if despesas.isEmpty {
@@ -121,10 +106,7 @@ struct CadastroView: View {
         }
     }
 
-    /* Este método trata a exclusão de itens feita pela própria lista.
-       Os índices recebidos se referem à lista ordenada exibida na tela,
-       então primeiro eles são convertidos nos objetos correspondentes
-       e só depois repassados ao ViewModel para a exclusão. */
+   
     private func deleteDespesa(offsets: IndexSet) {
         let itens = offsets.map { despesasOrdenadas[$0] }
 
@@ -135,8 +117,7 @@ struct CadastroView: View {
     }
 }
 
-/* Esta prévia serve para abrir a tela no canvas já com o contexto do Core Data
-   e com as dependências básicas injetadas, facilitando a visualização durante o desenvolvimento. */
+
 #Preview {
     NavigationStack {
         CadastroView(emailUsuario: "preview@payflow.com")

@@ -1,53 +1,16 @@
-/*
-Importa o SwiftUI, framework responsável por construir toda a interface da aplicação
-utilizando uma abordagem declarativa.
-*/
-import SwiftUI
 
-/*
-Importa o CoreData, utilizado para persistência de dados local no dispositivo.
-*/
+import SwiftUI
 import CoreData
 
-/*
-View principal do fluxo de despesas.
-
-Essa tela funciona como ponto de entrada da aplicação, exibindo:
-- Resumo geral das assinaturas
-- Acesso rápido para outras funcionalidades
-- Lista de serviços externos (dados vindos de API)
-*/
 struct MesesDespesasView: View {
 
-    // contexto do CoreData utilizado para leitura e escrita de dados
     @Environment(\.managedObjectContext) private var context
-
-    // container de dependências da aplicação (injeção de dependências)
     @EnvironmentObject private var dependencies: AppDependencies
-
-    // responsável por controlar a sessão do usuário (login/logout)
     @EnvironmentObject private var sessionStore: SessionStore
-
-    // ViewModel que concentra toda a lógica e estado da tela
     @StateObject private var mesesView = MesesDespesasViewModel()
-
-    // controla a abertura do modal de cadastro de assinatura
     @State private var exibirCadastro = false
 
-    /*
-     Define toda a estrutura visual da tela.
-
-     A tela é composta por:
-     - Um NavigationStack para navegação
-     - ScrollView com conteúdo rolável
-     - Cards de resumo no topo
-     - Área de navegação rápida
-     - Lista de dados vindos da API
-     - Toolbar com ações
-     - Modal para cadastro
-
-     Toda alteração no ViewModel reflete automaticamente aqui.
-    */
+    
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -175,16 +138,8 @@ struct MesesDespesasView: View {
         }
     }
 
-    /*
-     Responsável por recarregar os dados da tela.
+    //Responsável por recarregar os dados da tela.
 
-     Aqui o ViewModel é acionado para buscar:
-     - dados locais (CoreData)
-     - dados externos (API)
-
-     Esse método é utilizado tanto na abertura da tela quanto
-     após o fechamento do modal de cadastro.
-    */
     private func recarregarDados() async {
         await mesesView.load(
             assinaturaRepository: dependencies.makeAssinaturaRepository(context: context),
@@ -195,11 +150,9 @@ struct MesesDespesasView: View {
 
 }
 
-/*
-View simples responsável por listar os meses do ano.
 
-Serve como navegação para acessar dados filtrados por mês.
-*/
+//View simples responsável por listar os meses do ano. Serve como navegação para acessar dados filtrados por mês.
+
 private struct ListaMesesView: View {
 
     let emailUsuario: String

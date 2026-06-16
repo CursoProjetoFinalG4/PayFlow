@@ -1,38 +1,20 @@
-// Importa os componentes visuais usados para montar a tela.
 import SwiftUI
-
-// Importa o Core Data, necessário para manipular o registro exibido.
 import CoreData
 
-// Esta view mostra os dados de uma despesa já cadastrada e oferece ações de edição e exclusão.
 struct DetalheDespesaView: View {
 
-    // Recupera o contexto do Core Data disponível no ambiente da tela.
     @Environment(\.managedObjectContext) private var context
-
-    // Permite fechar a tela atual e voltar para a anterior.
     @Environment(\.dismiss) private var dismiss
-
-    // Dá acesso às dependências compartilhadas, como o repositório usado para excluir a despesa.
     @EnvironmentObject private var dependencies: AppDependencies
 
     let despesa: Despesa
     let emailUsuario: String
 
-    // Controla a abertura da tela de edição.
     @State private var exibirEdicao = false
-
-    // Controla a exibição do alerta de confirmação antes de excluir.
     @State private var exibirAlertaExclusao = false
-
-    // Guarda a mensagem de erro quando alguma operação falha.
     @State private var errorMessage: String?
 
-    /* Aqui a tela é montada com as informações principais da despesa.
-       Primeiro são mostrados os dados cadastrados, como nome, valor e vencimento.
-       Depois aparecem as ações disponíveis para quem estiver usando a tela.
-       Também ficam configurados o modal de edição, o alerta de confirmação da exclusão
-       e o alerta de erro, caso alguma tentativa de remoção não dê certo. */
+    
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {

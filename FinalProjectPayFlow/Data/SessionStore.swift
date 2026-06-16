@@ -1,9 +1,4 @@
-//
-//  SessionStore.swift
-//  FinalProjectPayFlow
-//
-//  Created by Santos, Adriano da Silva on 01/06/26.
-//
+
 
 import Foundation
 import Combine

@@ -210,9 +210,8 @@ struct FormDespesasViewModelTests {
 }
 
 
-/* Testa as validações da tela de criar conta.
-   Os cenários abaixo falham antes de chamar o repositório,
-   então nenhum usuário é gravado no aparelho. */
+// Testa as validações da tela de criar conta.
+   
 @MainActor
 struct CriarContaViewModelTests {
 
@@ -260,8 +259,8 @@ struct CriarContaViewModelTests {
 }
 
 
-/* Testa o controle de sessão.
-   Roda em série porque a sessão é persistida no UserDefaults compartilhado. */
+// Testa o controle de sessão.
+   
 @MainActor
 @Suite(.serialized)
 struct SessionStoreTests {
