@@ -1,38 +1,12 @@
-/*
-Importa o SwiftUI, responsável pela construção da interface declarativa.
 
-É usado aqui para montar a lista de vencimentos e os componentes visuais da tela.
-*/
 import SwiftUI
-
-/*
-Importa o CoreData para lidar com persistência local.
-
-Neste caso, ele é utilizado junto com @FetchRequest para buscar
-automaticamente as despesas salvas.
-*/
 import CoreData
 
-/*
-View responsável por exibir a lista de vencimentos das despesas.
 
-A tela mostra todas as assinaturas/despesas cadastradas,
-ordenadas por mês e nome, facilitando a visualização dos compromissos.
-
-Não possui ViewModel, pois utiliza diretamente o @FetchRequest
-para buscar os dados do CoreData.
-*/
 struct VencimentosView: View {
 
-    /*
-     FetchRequest responsável por buscar as despesas no banco local.
-
-     - Ordena primeiro pelo mês (mes)
-     - Depois pelo nome da despesa
-
-     O SwiftUI observa automaticamente essa coleção:
-     qualquer alteração no CoreData reflete na tela sem precisar recarregar manualmente.
-     */
+    
+     //FetchRequest responsável por buscar as despesas no banco local.
     private let emailUsuario: String
 
     @FetchRequest private var despesas: FetchedResults<Despesa>
@@ -55,19 +29,8 @@ struct VencimentosView: View {
         }
     }
 
-    /*
-     Define a interface da tela de vencimentos.
 
-     A estrutura é simples:
-     - Uma lista (List)
-     - Um estado vazio quando não há dados
-     - Um ForEach exibindo cada despesa cadastrada
-
-     Cada item mostra:
-     - Nome da despesa
-     - Mês de vencimento
-     - Valor formatado em moeda (BRL)
-     */
+     //Define a interface da tela de vencimentos.
     var body: some View {
         List {
             if despesas.isEmpty {
@@ -75,9 +38,7 @@ struct VencimentosView: View {
             } else {
                 ForEach(despesasOrdenadas) { item in
                     HStack(spacing: 14) {
-                        Image(systemName: "clock.fill")
-                            .font(.title3)
-                            .foregroundStyle(PayFlowCores.teal)
+                        LogoAssinaturaView(despesa: item, tamanho: 40, simboloTamanho: .body)
 
                         VStack(alignment: .leading, spacing: 4) {
                             Text(item.nomeDespesa ?? "Sem nome")

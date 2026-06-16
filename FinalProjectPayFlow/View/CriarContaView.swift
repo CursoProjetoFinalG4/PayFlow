@@ -1,16 +1,11 @@
-// Importa os componentes visuais necessários para montar a tela de cadastro.
 import SwiftUI
 
-// Esta view permite que um novo usuário crie uma conta no aplicativo.
 struct CriarContaView: View {
 
-    // Dá acesso ao repositório de autenticação usado para salvar o novo usuário.
     @EnvironmentObject private var dependencies: AppDependencies
 
-    // Permite voltar para a tela de login após concluir o cadastro.
     @Environment(\.dismiss) private var dismiss
 
-    // Controla o estado da tela, como carregamento e mensagens de erro.
     @StateObject private var viewModel = CriarContaViewModel()
     @State private var emailText = ""
     @State private var senha = ""

@@ -1,34 +1,19 @@
-// DesignSystem.swift
-//
-// Centraliza os elementos visuais reutilizáveis do PayFlow.
-// A ideia é estender a identidade premium da tela de login (gradiente teal,
-// cápsulas, sombras suaves) para o app inteiro, mantendo tudo coerente.
-//
-// Os componentes aqui se apoiam na paleta definida em `PayFlowCores`
-// (declarada em LoginEstilo.swift) e a complementam com novos tokens.
+
 
 import SwiftUI
 
 // MARK: - Paleta complementar
 
-/* Tokens extras que fecham o sistema de cores. A paleta base (teal, tealEscuro,
-   creme) continua em LoginEstilo.swift; aqui só adicionamos os papéis que faltavam. */
 extension PayFlowCores {
 
-    // Texto secundário/legendas, mais suave que o preto padrão.
     static let textoSecundario = Color(red: 0.42, green: 0.47, blue: 0.47)
-
-    // Cor de alerta/atenção, usada para vencimentos e valores em destaque.
     static let coral = Color(red: 0.90, green: 0.42, blue: 0.38)
-
-    // Dourado discreto para reforçar a sensação "premium" (economia/sugestões).
     static let dourado = Color(red: 0.83, green: 0.66, blue: 0.36)
 }
 
 // MARK: - Fundo padrão das telas internas
 
-/* Versão mais sóbria do fundo do login: um gradiente suave do creme para um
-   leve teal, pensado para ficar atrás de conteúdo sem competir com os cards. */
+
 struct FundoPadraoView: View {
     var body: some View {
         LinearGradient(
@@ -46,8 +31,6 @@ struct FundoPadraoView: View {
 
 // MARK: - Card base
 
-/* Container branco com cantos arredondados e sombra suave, no mesmo espírito
-   dos campos do login. É o bloco visual de construção das telas internas. */
 struct CardPayFlow<Content: View>: View {
     var espacamento: CGFloat = 16
     @ViewBuilder var conteudo: Content
@@ -64,8 +47,7 @@ struct CardPayFlow<Content: View>: View {
 
 // MARK: - Card de métrica (indicadores do topo)
 
-/* Card com ícone em círculo, título e valor em destaque. Usado nos indicadores
-   da home (total de assinaturas, gasto mensal, etc.). */
+
 struct CardMetrica: View {
     let titulo: String
     let valor: String
@@ -100,7 +82,6 @@ struct CardMetrica: View {
 
 // MARK: - Título de seção
 
-/* Cabeçalho de seção padronizado: ícone teal opcional + texto em tealEscuro. */
 struct TituloSecao: View {
     let texto: String
     var icone: String? = nil
@@ -121,7 +102,6 @@ struct TituloSecao: View {
 
 // MARK: - Tag / pílula
 
-/* Etiqueta arredondada (ex.: categoria de um serviço), em teal suave. */
 struct TagPayFlow: View {
     let texto: String
     var cor: Color = PayFlowCores.teal
@@ -139,8 +119,7 @@ struct TagPayFlow: View {
 
 // MARK: - Estilos de botão
 
-/* Botão primário: gradiente teal em cápsula, igual ao "Entrar" do login.
-   Inclui micro-feedback de toque (leve redução de escala e opacidade). */
+
 struct PayFlowBotaoPrimario: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -163,7 +142,7 @@ struct PayFlowBotaoPrimario: ButtonStyle {
     }
 }
 
-/* Botão secundário: contorno teal sobre fundo claro, para ações de menor ênfase. */
+//Botão secundário: contorno teal sobre fundo claro, para ações de menor ênfase.
 struct PayFlowBotaoSecundario: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -182,7 +161,6 @@ struct PayFlowBotaoSecundario: ButtonStyle {
     }
 }
 
-/* Açúcar sintático para usar `.buttonStyle(.payflowPrimario)` / `.payflowSecundario`. */
 extension ButtonStyle where Self == PayFlowBotaoPrimario {
     static var payflowPrimario: PayFlowBotaoPrimario { .init() }
 }
@@ -193,8 +171,7 @@ extension ButtonStyle where Self == PayFlowBotaoSecundario {
 
 // MARK: - Linha de navegação (estilo "lista premium")
 
-/* Linha tocável usada dentro de cards para navegação rápida, no padrão dos
-   ajustes do iOS: ícone, título e chevron. Pensada para uso em ScrollView. */
+
 struct LinhaNavegacao<Destino: View>: View {
     let titulo: String
     let icone: String
@@ -228,10 +205,7 @@ struct LinhaNavegacao<Destino: View>: View {
 
 // MARK: - Card de serviço/produto externo
 
-/* Card premium para exibir itens vindos da API externa.
-   Cada categoria ganha um ícone e cor próprios, criando identidade visual
-   por tipo de produto. O layout divide informação (topo) de preço (rodapé),
-   separados por uma linha sutil. */
+
 struct CardServico: View {
     let item: RemoteService
 
@@ -328,8 +302,7 @@ struct CardServico: View {
 
 // MARK: - Modificador de fundo de tela
 
-/* Aplica o fundo padrão atrás do conteúdo e padroniza a barra de navegação
-   com a cor creme da identidade. Use `.fundoPayFlow()` em qualquer tela. */
+
 private struct FundoPayFlowModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
@@ -341,7 +314,6 @@ private struct FundoPayFlowModifier: ViewModifier {
 }
 
 extension View {
-    /* Conveniência para aplicar o fundo e a barra padrão do PayFlow numa tela. */
     func fundoPayFlow() -> some View {
         modifier(FundoPayFlowModifier())
     }
